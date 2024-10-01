@@ -17,7 +17,7 @@ const Inventory = () => {
     const handleDownloadPdf = async () => {
         setErrorMessage('');
         try {
-            const response = await api.get(`http://localhost:8080/projections/download-pdf?aggregateId=${aggregateId}`, {
+            const response = await api.get(`/projections/download-pdf?aggregateId=${aggregateId}`, {
                 responseType: 'blob'
             });
             const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -35,11 +35,13 @@ const Inventory = () => {
     const handleSendEmail = async () => {
         setErrorMessage('');
         try {
-            await api.post('http://localhost:8080/inventory/send-email', { email });
-            setErrorMessage('PDF sent successfully!');
+            console.log('Email:', email);
+            console.log('Aggregate ID:', aggregateId);
+            await api.post(`/projections/send-pdf?aggregateId=${aggregateId}`, { email: email });
+            setErrorMessage({ error: false, text: 'PDF sent successfully!' });
         } catch (error) {
             console.error('Error sending PDF via email:', error);
-            setErrorMessage('Failed to send PDF. Please check the email address and try again.');
+            setErrorMessage({ error: true, text: 'Failed to send PDF. Please check the email address and try again.' });
         }
     };
 
@@ -85,11 +87,12 @@ const Inventory = () => {
                 </button>
 
                 {/* Mostrar mensaje de error o éxito */}
-                {errorMessage && (
-                    <div className="mt-4 p-2 w-full text-center text-red-600 bg-red-100 border border-red-400 rounded">
-                        {errorMessage}
-                    </div>
-                )}
+                {
+                    errorMessage && (
+                        <div className={`text-center mt-4 p-2 w-full ${errorMessage.error ? 'text-red-600 bg-red-100 border border-red-400 rounded' : 'text-green-600 bg-green-100 border border-green-400 rounded'}`}>
+                            {errorMessage.text}
+                        </div>
+                    )}
             </div>
         </div>
     );
