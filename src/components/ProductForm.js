@@ -45,7 +45,7 @@ const ProductForm = () => {
         <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-6 text-center">Add Product</h2>
             {message && (
-                <div className={`text-center ${message.error ? 'text-red-500' : 'text-green-500'}`}>
+                <div className={`text-center mt-4 p-2 w-full ${message.error ? 'text-red-600 bg-red-100 border border-red-400 rounded' : 'text-green-600 bg-green-100 border border-green-400 rounded'}`}>
                     {message.text}
                 </div>
             )}

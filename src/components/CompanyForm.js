@@ -22,8 +22,8 @@ const CompanyForm = () => {
     return (
         <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-6 text-center">Register Company</h2>
-            {feedback?.success && <p className="text-green-500">{feedback.success}</p>}
-            {feedback?.error && <p className="text-red-500">{feedback.error}</p>}
+            {feedback?.success && <p className="text-center mt-4 p-2 w-full text-green-600 bg-green-100 border border-green-400 rounded">{feedback.success}</p>}
+            {feedback?.error && <p className="text-center mt-4 p-2 w-full text-red-600 bg-red-100 border border-red-400 rounded">{feedback.error}</p>}
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 {['nit', 'name', 'address', 'phone'].map((field) => (
