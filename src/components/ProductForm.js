@@ -7,7 +7,7 @@ const ProductForm = () => {
         name: '',
         characteristics: '',
         prices: '',
-        companyId: ''
+        companyNIT: ''
     });
 
     const handleChange = (e) => {
@@ -29,7 +29,7 @@ const ProductForm = () => {
     return (
         <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-6 text-center">Add Product</h2>
-            <form onSubmit={addProduct(product.companyId, product)} className="space-y-4">
+            <form onSubmit={addProduct(product.companyNIT, product)} className="space-y-4">
                 <input
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
                     name="code" placeholder="Product Code" value={product.code} onChange={handleChange} required />
@@ -44,7 +44,7 @@ const ProductForm = () => {
                     name="prices" placeholder="Prices (comma-separated)" value={product.prices} onChange={handleChange} required />
                 <input
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                    name="companyId" placeholder="Company ID" value={product.companyId} onChange={handleChange} required />
+                    name="companyId" placeholder="Company ID" value={product.companyNIT} onChange={handleChange} required />
                 <button
                     type="submit"
                     className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors duration-300">

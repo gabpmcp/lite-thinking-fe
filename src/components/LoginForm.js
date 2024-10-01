@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import api from '../services/loginApi';  // Importa la instancia de Axios con el interceptor configurado
+import loginApi from '../services/loginApi';  // Importa la instancia de Axios con el interceptor configurado
 
 const LoginForm = ({ onLoginSuccess }) => {
     // Estados para username, password y errores
@@ -13,7 +13,7 @@ const LoginForm = ({ onLoginSuccess }) => {
         try {
             console.log('Username:', username);
             // Hacer la solicitud de login enviando el username en lugar del email
-            const response = await api.post('/auth/login', { username, password });
+            const response = await loginApi.post('/auth/login', { username, password });
 
             // Guardar el token en localStorage
             const token = response.data.token;

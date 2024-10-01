@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../services/api';  // Importar la instancia de Axios configurada
 
 const CompanyForm = () => {
     const [company, setCompany] = useState({
@@ -7,29 +7,28 @@ const CompanyForm = () => {
         name: '',
         address: '',
         phone: ''
-    });
+    })
 
     const handleChange = (e) => {
         setCompany({ ...company, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const registerCompany = async (aggregateId, company) => {
         try {
-            await axios.post('http://localhost:8080/orchestrator', {
+            const response = await api.post(`/orchestrator/commands?aggregateId=${aggregateId}`, {
                 type: 'RegisterCompany',
                 ...company
             });
-            alert('Company registered successfully!');
+            console.log('Company registered successfully', response.data);
         } catch (error) {
-            alert('Failed to register company.');
+            console.error('Failed to register product', error);
         }
     };
 
     return (
         <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-6 text-center">Register Company</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={() => registerCompany(company.nit, company)} className="space-y-4">
                 <input
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
                     name="nit" placeholder="NIT" value={company.nit} onChange={handleChange} required />
