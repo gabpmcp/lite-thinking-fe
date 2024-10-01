@@ -1,49 +1,43 @@
 import React, { useState } from 'react';
-import api from '../services/api';  // Importar la instancia de Axios configurada
+import api from '../services/api';
 
 const CompanyForm = () => {
-    const [company, setCompany] = useState({
-        nit: '',
-        name: '',
-        address: '',
-        phone: ''
-    })
+    const [company, setCompany] = useState({ nit: '', name: '', address: '', phone: '' });
+    const [feedback, setFeedback] = useState(null);  // Estado unificado para mensajes de éxito y error
 
-    const handleChange = (e) => {
-        setCompany({ ...company, [e.target.name]: e.target.value });
-    };
+    const handleChange = (e) => setCompany({ ...company, [e.target.name]: e.target.value });
 
-    const registerCompany = async (aggregateId, company) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            const response = await api.post(`/orchestrator/commands?aggregateId=${aggregateId}`, {
-                type: 'RegisterCompany',
-                ...company
-            });
-            console.log('Company registered successfully', response.data);
+            await api.post(`/orchestrator/commands?aggregateId=${company.nit}`, { type: 'RegisterCompany', ...company });
+            setFeedback({ success: 'Company registered successfully!' });
+            console.clear();
         } catch (error) {
-            console.error('Failed to register product', error);
+            console.error('Failed to register the company', error);
+            setFeedback({ data: { type: 'RegisterCompany', ...company }, error: error?.response?.data || 'Failed to register the company. Please try again.' });
         }
     };
 
     return (
         <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-6 text-center">Register Company</h2>
-            <form onSubmit={() => registerCompany(company.nit, company)} className="space-y-4">
-                <input
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                    name="nit" placeholder="NIT" value={company.nit} onChange={handleChange} required />
-                <input
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                    name="name" placeholder="Company Name" value={company.name} onChange={handleChange} required />
-                <input
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                    name="address" placeholder="Address" value={company.address} onChange={handleChange} required />
-                <input
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                    name="phone" placeholder="Phone" value={company.phone} onChange={handleChange} required />
-                <button
-                    type="submit"
-                    className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors duration-300">
+            {feedback?.success && <p className="text-green-500">{feedback.success}</p>}
+            {feedback?.error && <p className="text-red-500">{feedback.error}</p>}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+                {['nit', 'name', 'address', 'phone'].map((field) => (
+                    <input
+                        key={field}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+                        name={field}
+                        placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                        value={company[field]}
+                        onChange={handleChange}
+                        required
+                    />
+                ))}
+                <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors duration-300">
                     Register
                 </button>
             </form>
